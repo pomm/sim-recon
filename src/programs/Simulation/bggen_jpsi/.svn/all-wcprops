@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/repos/!svn/ver/17554/trunk/home/sdobbs/bggen_jpsi
+END
+fix_warnings.py
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/fix_warnings.py
+END
+SConscript
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/SConscript
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/Makefile
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/README
+END

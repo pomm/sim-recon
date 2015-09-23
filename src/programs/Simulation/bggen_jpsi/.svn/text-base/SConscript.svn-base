@@ -1,0 +1,6 @@
+
+Import('*')
+
+#SConscript(dirs=['code'], exports='env osname', duplicate=0)
+SConscript(dirs=['code','xsec_table'], exports='env',  duplicate=0)
+

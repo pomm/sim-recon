@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/xsec_table
+END
+xsec_pri.cc
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/xsec_table/xsec_pri.cc
+END
+xsec_pri_F.F
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/xsec_table/xsec_pri_F.F
+END
+SConscript
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/xsec_table/SConscript
+END
+xsec_jpsi.F
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/xsec_table/xsec_jpsi.F
+END

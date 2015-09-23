@@ -1,0 +1,107 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw
+END
+p_kin.f
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw/p_kin.f
+END
+ev_stat.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw/ev_stat.f
+END
+bggen.dat
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw/bggen.dat
+END
+pi_plot.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw/pi_plot.f
+END
+part_kin.f
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw/part_kin.f
+END
+efm.f
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw/efm.f
+END
+bgg_pri.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw/bgg_pri.f
+END
+plot_pi0_photons.kumac
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw/plot_pi0_photons.kumac
+END
+last.kumac
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw/last.kumac
+END
+efmass.f
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw/efmass.f
+END
+bggen.nt
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw/bggen.nt
+END
+bggen.his
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw/bggen.his
+END
+gloren.f
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw/gloren.f
+END
+example_1.kumac
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw/example_1.kumac
+END
+p_kin_auto.f
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw/p_kin_auto.f
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw/Makefile
+END
+bgg_read.f
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/paw/bgg_read.f
+END

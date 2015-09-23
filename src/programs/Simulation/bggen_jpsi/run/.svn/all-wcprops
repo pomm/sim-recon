@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/run
+END
+run.ffr
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/run/run.ffr
+END
+pythia.dat
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/run/pythia.dat
+END
+run_jpsi.ffr
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/run/run_jpsi.ffr
+END
+pythia-geant.map
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/run/pythia-geant.map
+END
+particle.dat
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/run/particle.dat
+END
+fort.15
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/repos/!svn/ver/17486/trunk/home/sdobbs/bggen_jpsi/run/fort.15
+END
