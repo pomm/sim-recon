@@ -10,6 +10,9 @@ using std::string;
 #include <JANA/JVersion.h>
 
 #include <pthread.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #include "DApplication.h"
 #include <HDDM/DEventSourceHDDMGenerator.h>
@@ -56,6 +59,25 @@ DApplication::DApplication(int narg, char* argv[]):JApplication(narg, argv)
 		AddPluginPath(string(ptr) + "/" + sbms_osname + "/plugins");  // SBMS
 		AddPluginPath(string(ptr) + "/lib/" + sbms_osname);     // BMS
 	}
+
+    // We use JANA resources to fetch information like the magnetic field
+    // If we are running at JLab, we want to preferentially fetch this information
+    // from a standard location.  This will prevent misconfigured batch jobs
+    // from hiting the default webserver that serves this information too hard.
+    const char *JANA_RESOURCE_DIR = getenv("JANA_RESOURCE_DIR");
+    if(JANA_RESOURCE_DIR == NULL) {
+        jerr << "JANA_RESOURCE_DIR is not set..." << endl;
+        
+        const char *CUE_RESOURCE_DIRECTORY = "/u/group/halld/www/halldweb/html/resources";
+        struct stat st;          
+        stat(CUE_RESOURCE_DIRECTORY, &st);
+
+        bool isdir = S_ISDIR(st.st_mode);
+        if(isdir) {
+            setenv("JANA_RESOURCE_DIR", CUE_RESOURCE_DIRECTORY, 0);
+        }
+    }
+
 	
 	//Register CCDB calibration generator
 	AddCalibrationGenerator(new DCalibrationGeneratorCCDB());
