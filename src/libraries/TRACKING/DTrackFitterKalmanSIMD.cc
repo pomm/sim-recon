@@ -2838,6 +2838,10 @@ inline double DTrackFitterKalmanSIMD::GetEnergyVariance(double ds,
 jerror_t DTrackFitterKalmanSIMD::KalmanLoop(void){
     if (z_<Z_MIN) return VALUE_OUT_OF_RANGE;
 
+    // Vector to store the list of hits used in the fit for the forward (ALT1 parametrization
+    vector<const DCDCTrackHit*>forwardALT1_cdc_used_in_fit;
+    vector<const DFDCPseudo*>forwardALT1_fdc_used_in_fit;
+
     // Vector to store the list of hits used in the fit for the forward parametrization
     vector<const DCDCTrackHit*>forward_cdc_used_in_fit;
 
@@ -2956,12 +2960,16 @@ jerror_t DTrackFitterKalmanSIMD::KalmanLoop(void){
         if (error!=FIT_FAILED){
             if (my_cdchits.size()<6){
                 if (ndf_==0) return UNRECOVERABLE_ERROR;
-                return NOERROR;
+		return NOERROR;
             }
             fdc_prob=TMath::Prob(chisq_,ndf_);
             if (fdc_prob>0.001 && error==FIT_SUCCEEDED) return NOERROR;
             fdc_ndf=ndf_;
             fdc_chisq=chisq_;
+	    
+	    // keep vector of hits used in case this track has best probability 
+	    forwardALT1_cdc_used_in_fit.assign(cdchits_used_in_fit.begin(),cdchits_used_in_fit.end());
+	    forwardALT1_fdc_used_in_fit.assign(fdchits_used_in_fit.begin(),fdchits_used_in_fit.end());	
         }
         if (my_cdchits.size()<6) return UNRECOVERABLE_ERROR;
     }
@@ -3031,6 +3039,10 @@ jerror_t DTrackFitterKalmanSIMD::KalmanLoop(void){
                         phi_=phi;
                         tanl_=tanl;
                         q_over_pt_=q_over_pt;
+
+			// assign hits used in fit from ALT1::ForwardFit() when it has better probability
+			cdchits_used_in_fit.assign(forwardALT1_cdc_used_in_fit.begin(),forwardALT1_cdc_used_in_fit.end());
+			fdchits_used_in_fit.assign(forwardALT1_fdc_used_in_fit.begin(),forwardALT1_fdc_used_in_fit.end());
 
 			//                         _DBG_ << endl;
                         return NOERROR;
