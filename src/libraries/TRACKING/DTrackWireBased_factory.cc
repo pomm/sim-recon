@@ -534,6 +534,10 @@ void DTrackWireBased_factory::DoFit(unsigned int c_id,
       for(unsigned int m=0; m<cdchits.size(); m++)track->AddAssociatedObject(cdchits[m]);
       for(unsigned int m=0; m<fdchits.size(); m++)track->AddAssociatedObject(fdchits[m]);
       
+      if (DEBUG_LEVEL>0) {
+	_DBG_<<"WireBasedTrack Output: Cand has "<<track->Ndof+5<<" hits and WB has "<<cdchits.size()+fdchits.size()<<" with "<<cdchits.size()<<" CDC and "<<fdchits.size()<<" FDC hits and Ndof = "<<fitter->GetNdof()<<endl;
+      } 
+
       // Add DTrackCandidate as associated object
       track->AddAssociatedObject(candidate);
       

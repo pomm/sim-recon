@@ -908,6 +908,10 @@ bool DTrackTimeBased_factory::DoFit(const DTrackWireBased *track,
       const vector<const DCDCTrackHit*> &cdchits = fitter->GetCDCFitHits();
       const vector<const DFDCPseudo*> &fdchits = fitter->GetFDCFitHits();
       
+      if (DEBUG_LEVEL>0) {
+	_DBG_<<"TimeBasedTrack Output: WB   has "<<track->Ndof+5<<" hits and TB has "<<cdchits.size()+fdchits.size()<<" with "<<cdchits.size()<<" CDC and "<<fdchits.size()<<" FDC hits and Ndof = "<<fitter->GetNdof()<<endl;
+      } 
+
       unsigned int num_fdc_potential=fitter->GetNumPotentialFDCHits();
       unsigned int num_cdc_potential=fitter->GetNumPotentialCDCHits();
 

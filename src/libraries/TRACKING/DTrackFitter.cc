@@ -37,8 +37,9 @@ DTrackFitter::DTrackFitter(JEventLoop *loop)
 
 	CORRECT_FOR_ELOSS=true;
 	gPARMS->SetDefaultParameter("TRKFIT:CORRECT_FOR_ELOSS",CORRECT_FOR_ELOSS);
-
-
+	
+	gPARMS->SetDefaultParameter("TRKFIT:DEBUG_LEVEL",DEBUG_LEVEL);
+	
 	DApplication* dapp = dynamic_cast<DApplication*>(loop->GetJApplication());
 	if(!dapp){
 		_DBG_<<"Cannot get DApplication from JEventLoop! (are you using a JApplication based program?)"<<endl;
@@ -240,6 +241,13 @@ DTrackFitter::FindHitsAndFitTrack(const DKinematicData &starting_params,
 	loop->Get(fdcpseudos);
 	DTrackHitSelector::fit_type_t input_type = fit_type==kTimeBased ? DTrackHitSelector::kWireBased:DTrackHitSelector::kHelical;
 	hitselector->GetAllHits(input_type, rt, cdctrackhits, fdcpseudos, this,N);
+	
+	if (DEBUG_LEVEL>0) {
+		if(fit_type==kWireBased)
+			_DBG_<<"HitSelector Output:    Cand has "<<N<<" hits and WB has "<<cdchits.size()+fdchits.size()<<" with "<<cdchits.size()<<" CDC and "<<fdchits.size()<<" FDC hits"<<endl;
+		else if(fit_type==kTimeBased) 
+			_DBG_<<"HitSelector Output:    WB   has "<<N<<" hits and TB has "<<cdchits.size()+fdchits.size()<<" with "<<cdchits.size()<<" CDC and "<<fdchits.size()<<" FDC hits"<<endl;
+	}
 
 	// If the hit selector found no hits at all on the track, the most
 	// likely explanation is that the charge of the candidate was wrong,
