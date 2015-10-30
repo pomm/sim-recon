@@ -393,7 +393,9 @@ kalman_error_t DTrackFitterKalmanSIMD_ALT1::KalmanForward(double fdc_anneal_fact
 	  num_fdc_hits-=forward_traj[k].num_hits;
       }
     }
-    else if (more_cdc_measurements /* && z<endplate_z*/){   
+    else if (more_cdc_measurements /* && z<endplate_z*/){  
+      bool endplate_flag = false;
+ 
       // new wire position
       wirepos=origin;
       wirepos+=(z-z0w)*dir;
@@ -407,7 +409,7 @@ kalman_error_t DTrackFitterKalmanSIMD_ALT1::KalmanForward(double fdc_anneal_fact
       if (doca2>old_doca2 /* && z<endplate_z */){
 	if(my_cdchits[cdc_index]->status==good_hit){
 	  double newz=z;
-	
+	  
 	  // Get energy loss 
 	  double dedx=0.;
 	  if (CORRECT_FOR_ELOSS){
@@ -459,8 +461,10 @@ kalman_error_t DTrackFitterKalmanSIMD_ALT1::KalmanForward(double fdc_anneal_fact
 	      newz=z+dz;
 	      // Check for exiting the straw
 	      if (newz>endplate_z){
+		if (DEBUG_LEVEL>10) cout<<"Trajectory passed CDC endplate: skipping drift time"<<endl;
 		newz=endplate_z;
 		dz=endplate_z-z;
+		endplate_flag = true;
 	      }
 	      // Step the state and covariance through the field
 	      if (dz>mStepSizeZ){
@@ -652,6 +656,14 @@ kalman_error_t DTrackFitterKalmanSIMD_ALT1::KalmanForward(double fdc_anneal_fact
 	    double B=forward_traj[k_minus_1].B;
 	    ComputeCDCDrift(tdrift,B,dm,Vc,tcorr);
 	  }
+ 
+	  // skip drift times for hits where trajectory goes beyond CDC endplate
+	  if(endplate_flag || dm>0.7799) { 
+             dm=0.39;
+             tdrift=0.;
+             tcorr=0.;
+	     Vc=0.0507*1.15;
+          }
 
 	  // Residual
 	  double res=dm-d;
