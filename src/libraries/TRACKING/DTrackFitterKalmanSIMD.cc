@@ -2975,7 +2975,7 @@ jerror_t DTrackFitterKalmanSIMD::KalmanLoop(void){
     }
 
     // Deal with hits in the CDC 
-    if (my_cdchits.size()>5){
+    if (my_cdchits.size()>5 && my_fdchits.size()<5){
         kalman_error_t error=FIT_NOT_DONE;
         kalman_error_t cdc_error=FIT_NOT_DONE;
 

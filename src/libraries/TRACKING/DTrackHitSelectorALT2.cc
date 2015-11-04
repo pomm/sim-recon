@@ -528,8 +528,8 @@ void DTrackHitSelectorALT2::GetFDCHits(fit_type_t fit_type, const DReferenceTraj
 
     if (fit_type!=kHelical){ 
       // Factors take into account improved resolution after wire-based fit
-      var_d*=0.1;
-      var_u*=0.1;
+      var_d*=0.5;
+      var_u*=0.5;
     }
 
     // Calculate chisq

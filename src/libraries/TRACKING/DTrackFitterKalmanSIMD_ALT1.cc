@@ -447,7 +447,7 @@ kalman_error_t DTrackFitterKalmanSIMD_ALT1::KalmanForward(double fdc_anneal_fact
 	  double two_step=step1+step2;
 	  if (fabs(qBr2p*S(state_q_over_p)
 		   *bfield->GetBz(S(state_x),S(state_y),z)
-		   *two_step/sinl)<0.01 
+		   *two_step/sinl)<0.0115
 	      && denom>EPS)
 	    {
 	    double dzw=z-z0w;
@@ -461,7 +461,7 @@ kalman_error_t DTrackFitterKalmanSIMD_ALT1::KalmanForward(double fdc_anneal_fact
 	      newz=z+dz;
 	      // Check for exiting the straw
 	      if (newz>endplate_z){
-		if (DEBUG_LEVEL>10) cout<<"Trajectory passed CDC endplate: skipping drift time"<<endl;
+		if (DEBUG_LEVEL>10) cout<<"Trajectory past CDC endplate: skipping drift time"<<endl;
 		newz=endplate_z;
 		dz=endplate_z-z;
 		endplate_flag = true;
@@ -656,9 +656,9 @@ kalman_error_t DTrackFitterKalmanSIMD_ALT1::KalmanForward(double fdc_anneal_fact
 	    double B=forward_traj[k_minus_1].B;
 	    ComputeCDCDrift(tdrift,B,dm,Vc,tcorr);
 	  }
- 
+	  
 	  // skip drift times for hits where trajectory goes beyond CDC endplate
-	  if(endplate_flag || dm>0.7799) { 
+	  if(endplate_flag || dm>0.7799 || forward_traj[k].z > 164.) { 
              dm=0.39;
              tdrift=0.;
              tcorr=0.;
