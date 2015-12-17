@@ -54,8 +54,6 @@ ProductionMechanism::produceResonance( const TLorentzVector& beam ){
 	
 	double cmEnergy = ( lab2cmBoost * ( target + beam ) ).E();
 	double beamMomCM = cmMomentum( cmEnergy, beam.M(), target.M() );
-
-  double exptMax = exp(-1.)/m_slope;
   
   double t, tMax, resMass, resMomCM;
 
@@ -66,7 +64,7 @@ ProductionMechanism::produceResonance( const TLorentzVector& beam ){
     tMax = 4. * beamMomCM * resMomCM;
     t = random( 0, tMax ); 
   } 
-	while( random( 0., exptMax ) > t*exp(-m_slope*t) );
+  while( random( 0., 1. ) > exp(-m_slope*t) );
 	
 	TVector3 resonanceMomCM;
 	resonanceMomCM.SetMagThetaPhi( resMomCM,

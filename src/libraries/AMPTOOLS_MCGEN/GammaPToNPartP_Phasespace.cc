@@ -1,5 +1,5 @@
 /*
- *  GammaPToXYP.cc
+ *  GammaPToNPartP_Phasespace.cc
  *  GlueXTools
  *
  *  Created by Matthew Shepherd on 1/22/10.
@@ -9,10 +9,7 @@
 
 #include "TLorentzVector.h"
 
-#include "AMPTOOLS_MCGEN/GammaPToXYP.h"
-#include "AMPTOOLS_MCGEN/TwoBodyDecayFactory.h"
-
-#include "IUAmpTools/Kinematics.h"
+#include "AMPTOOLS_MCGEN/GammaPToNPartP_Phasespace.h"
 
 // FORTRAN routines
 extern "C"{
@@ -34,24 +31,19 @@ double dNidx(double x)
         return (double)dnidx_(&xx);
 }
 
-GammaPToXYP::GammaPToXYP( float lowMassXY, float highMassXY, 
-                          float massX, float massY, float beamMaxE, float beamPeakE, float beamLowE, float beamHighE,
-                          ProductionMechanism::Type type, float tslope ) : 
-m_prodMech( ProductionMechanism::kProton, type, tslope ), // last arg is t dependence
+GammaPToNPartP_Phasespace::GammaPToNPartP_Phasespace( vector<double> &ChildMass, float beamMaxE, float beamPeakE, float beamLowE, float beamHighE) : 
 m_target( 0, 0, 0, 0.938 ),
-m_childMass( 0 ) {
+m_childMass( ChildMass ) {
 
-  m_childMass.push_back( massX );
-  m_childMass.push_back( massY );
-  
-  m_prodMech.setMassRange( lowMassXY, highMassXY );
+  m_Npart = ChildMass.size();
+  assert(m_Npart>1);
  
   // Initialize coherent brem table
   float Emax =  beamMaxE;
   float Epeak = beamPeakE;
   float Elow = beamLowE;
   float Ehigh = beamHighE;
-  
+
   int doPolFlux=0;  // want total flux (1 for polarized flux)
   float emitmr=20.e-9; // electron beam emittance
   float radt=50.e-6; // radiator thickness in m
@@ -74,35 +66,38 @@ m_childMass( 0 ) {
 }
 
 Kinematics* 
-GammaPToXYP::generate(){
+GammaPToNPartP_Phasespace::generate(){
 
   double beamE = cobrem_vs_E->GetRandom();
   m_beam.SetPxPyPzE(0,0,beamE,beamE);
+  TLorentzVector cm = m_beam + m_target;
 
-  TLorentzVector resonance = m_prodMech.produceResonance( m_beam );
-  double genWeight = m_prodMech.getLastGeneratedWeight();
-  
+  Double_t masses[m_Npart];
+  for(uint i=0; i<m_Npart; i++)
+	  masses[i] = m_childMass[i];
+
+  TGenPhaseSpace phsp;
+  phsp.SetDecay(cm,m_Npart,masses);
+
+  double phsp_wt_max = phsp.GetWtMax();
+  double genWeight;
+  do {
+     genWeight = phsp.Generate();
+  }
+  while( random(0., phsp_wt_max) >= genWeight || genWeight != genWeight);
+
   vector< TLorentzVector > allPart;
   allPart.push_back( m_beam );
-  allPart.push_back( m_beam + m_target - resonance );
-  
-  TwoBodyDecayFactory decay( resonance.M(), m_childMass );
-  
-  vector<TLorentzVector> fsPart = decay.generateDecay();
-  
-  for( vector<TLorentzVector>::iterator aPart = fsPart.begin();
-      aPart != fsPart.end(); ++aPart ){
-    
-    aPart->Boost( resonance.BoostVector() );
-    allPart.push_back( *aPart );
+  for(uint i=0; i<m_Npart; i++) {
+	  allPart.push_back( *phsp.GetDecay(i) );
   }
  
   return new Kinematics( allPart, genWeight );
 }
 
-void
-GammaPToXYP::addResonance( float mass, float width, float bf ){
-  
-  m_prodMech.addResonance( mass, width, bf );
+double
+GammaPToNPartP_Phasespace::random( double low, double hi ) const {
+
+        return( ( hi - low ) * drand48() + low );
 }
 
