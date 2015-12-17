@@ -80,7 +80,10 @@ TwoPiAngles::calcAmplitude( GDouble** pKin ) const {
 	//if(psi > PI) psi -= 2*PI;
 	
 	// vector meson production from K. Schilling et. al.
-	GDouble Pgamma = 0.5;
+	GDouble Pgamma = 0.0;
+	GDouble Egamma = beam.E();
+	if(Egamma < 3.0)
+		Pgamma = 0.6 * TMath::Gaus(Egamma, 3.0, 0.3);
 	
 	GDouble W = 0.5*(1. - rho000) + 0.5*(3.*rho000 - 1.)*cosTheta*cosTheta - sqrt(2.)*rho100*sin2Theta*cos(phi) - rho1m10*sinSqTheta*cos(2.*phi);
 	
