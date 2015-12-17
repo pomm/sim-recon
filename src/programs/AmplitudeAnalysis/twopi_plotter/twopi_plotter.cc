@@ -18,12 +18,14 @@
 #include "AMPTOOLS_DATAIO/TwoPiPlotGenerator.h"
 #include "AMPTOOLS_DATAIO/ROOTDataReader.h"
 #include "AMPTOOLS_AMPS/TwoPiAngles.h"
+#include "AMPTOOLS_AMPS/TwoPiRhoJPAC.h"
 
 typedef TwoPiPlotGenerator PlotGen;
 
 void atiSetup(){
   
   AmpToolsInterface::registerAmplitude( TwoPiAngles() );
+  AmpToolsInterface::registerAmplitude( TwoPiRhoJPAC() );
   AmpToolsInterface::registerDataReader( ROOTDataReader() );
 }
 
