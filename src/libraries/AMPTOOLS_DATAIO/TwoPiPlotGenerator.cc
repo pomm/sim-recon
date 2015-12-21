@@ -13,7 +13,9 @@ PlotGenerator( results )
   // calls to bookHistogram go here
   
   bookHistogram( k2PiMass, new Histogram1D( 200, 0.0, 2.0, "M2pi", "Invariant Mass of #pi^{+} #pi^{-}") );
+  bookHistogram( kProtonPiPlusMass, new Histogram1D( 200, 0.5, 2.5, "MProtonPiPlus", "Invariant Mass of p #pi^{+}") );
   bookHistogram( kt, new Histogram1D( 200, 0.0, 2.0, "t", "-t") );
+  bookHistogram( ktdeltapp, new Histogram1D( 200, 0.0, 2.0, "tdeltapp", "-t_{#Delta_{++}}") );
   bookHistogram( kPiPCosTheta, new Histogram1D( 50, -1., 1., "cosTheta", "cos( #theta ) of Resonance Production") );
 
   bookHistogram( kPhiPiPlus,  new Histogram1D( 50, -1*PI, PI, "PhiPiPlus",  "#Phi_{#pi_{+}}" ) );
@@ -30,6 +32,8 @@ TwoPiPlotGenerator::projectEvent( Kinematics* kin ){
   TLorentzVector recoil = kin->particle( 1 );
   TLorentzVector p1 = kin->particle( 2 );
   TLorentzVector p2 = kin->particle( 3 );
+
+  TLorentzVector protonpiplus = recoil + p1; 
 
   TLorentzVector resonance = p1 + p2; 
   TLorentzRotation resonanceBoost( -resonance.BoostVector() );
@@ -57,11 +61,15 @@ TwoPiPlotGenerator::projectEvent( Kinematics* kin ){
   // calls to fillHistogram go here
   
   fillHistogram( k2PiMass, ( resonance ).M() );
+  fillHistogram( kProtonPiPlusMass, ( protonpiplus ).M() );
   
   TLorentzVector target(0, 0, 0, 0.938);
   GDouble t = -1.*(target - recoil).M2();
   fillHistogram( kt, t );
   
+  GDouble tdeltapp = fabs( (beam - p2).M2() );
+  fillHistogram( ktdeltapp, tdeltapp );
+
   fillHistogram( kPiPCosTheta, cosTheta );
 
   fillHistogram( kPhiPiPlus,  p1.Phi() );
