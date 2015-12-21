@@ -143,7 +143,6 @@ bool DCustomAction_p2pi_hists::Perform_Action(JEventLoop* locEventLoop, const DP
 
 	// copied from TwoPiAngles
 	TLorentzRotation resonanceBoost( -locP4_2pi.BoostVector() );
-	
 	TLorentzVector beam_res = resonanceBoost * locBeamPhoton->lorentzMomentum();
 	TLorentzVector recoil_res = resonanceBoost * locProtonP4;
 	TLorentzVector p1_res = resonanceBoost * locPiPlus_P4;
@@ -151,15 +150,16 @@ bool DCustomAction_p2pi_hists::Perform_Action(JEventLoop* locEventLoop, const DP
 	TVector3 z = -recoil_res.Vect().Unit();
 	TVector3 y = beam_res.Vect().Cross(z).Unit();
 	TVector3 x = y.Cross(z).Unit();
-	
 	TVector3 angles(   (p1_res.Vect()).Dot(x),
 			   (p1_res.Vect()).Dot(y),
 			   (p1_res.Vect()).Dot(z) );
 
 	double cosTheta = angles.CosTheta();
-
 	double phi = angles.Phi();
-        double Phi = locProtonP4.Vect().Phi();
+
+	TVector3 eps(1.0, 0.0, 0.0); // beam linear polarization vector
+	double Phi = atan2(y.Dot(eps), beam_res.Vect().Unit().Dot(eps.Cross(y)));
+
 	double locPsi = phi - Phi;
 	if(locPsi < -1*TMath::Pi()) locPsi += 2*TMath::Pi();
         if(locPsi > TMath::Pi()) locPsi -= 2*TMath::Pi();
