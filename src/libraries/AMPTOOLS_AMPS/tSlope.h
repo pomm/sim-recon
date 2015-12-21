@@ -46,6 +46,8 @@ private:
 
   AmpParameter slope;
 
+  vector<int> resonanceChildren;
+
 };
 
 #endif
