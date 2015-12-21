@@ -16,9 +16,11 @@
 
 #include "AMPTOOLS_AMPS/TwoPiAngles.h"
 #include "AMPTOOLS_AMPS/BreitWigner.h"
+#include "AMPTOOLS_AMPS/Uniform.h"
+#include "AMPTOOLS_AMPS/tSlope.h"
 
-#include "AMPTOOLS_MCGEN/ProductionMechanism.h"
 #include "AMPTOOLS_MCGEN/GammaPToXYP.h"
+#include "AMPTOOLS_MCGEN/GammaPToNPartP_Phasespace.h"
 
 #include "IUAmpTools/AmpToolsInterface.h"
 #include "IUAmpTools/ConfigFileParser.h"
@@ -136,35 +138,27 @@ int main( int argc, char* argv[] ){
 	// random number initialization (set to 0 by default)
 	gRandom->SetSeed(seed);
 
+	vector< int > pTypes;
+	vector< double > pMasses;
+	pTypes.push_back( Gamma );  
+	pTypes.push_back( Proton );   pMasses.push_back( ParticleMass(Proton) );
+	pTypes.push_back( PiPlus );   pMasses.push_back( ParticleMass(PiPlus) );
+	pTypes.push_back( PiMinus );  pMasses.push_back( ParticleMass(PiMinus) );
+
 	// setup AmpToolsInterface
 	AmpToolsInterface::registerAmplitude( TwoPiAngles() );
 	AmpToolsInterface::registerAmplitude( BreitWigner() );
+	AmpToolsInterface::registerAmplitude( Uniform() );
+	AmpToolsInterface::registerAmplitude( tSlope() );
 	AmpToolsInterface ati( cfgInfo, AmpToolsInterface::kMCGeneration );
+
+	//ProductionMechanism::Type type =
+	//	( genFlat ? ProductionMechanism::kFlat : ProductionMechanism::kResonant );
 	
-	ProductionMechanism::Type type =
-		( genFlat ? ProductionMechanism::kFlat : ProductionMechanism::kResonant );
-	
-	// generate over a range of mass -- the daughters are two charged pions
-	GammaPToXYP resProd( lowMass, highMass, 0.140, 0.140, beamMaxE, beamPeakE, beamLowE, beamHighE, type );
-	
-	// seed the distribution with a sum of noninterfering Breit-Wigners
-	// we can easily compute the PDF for this and divide by that when
-	// doing accept/reject -- improves efficiency if seeds are picked well
-	
-	if( !genFlat ){
-		
-		// the lines below should be tailored by the user for the particular desired
-		// set of amplitudes -- doing so will improve efficiency.  Leaving as is
-		// won't make MC incorrect, it just won't be as fast as it could be
-		
-		resProd.addResonance( 0.775, 0.146,  1.0 );
-	}
-	
-	vector< int > pTypes;
-	pTypes.push_back( Gamma );
-	pTypes.push_back( Proton );
-	pTypes.push_back( PiPlus );
-	pTypes.push_back( PiMinus );
+	// generate over all masses -- the daughters are two charged pions
+	//double tslope = 6.0;
+	//GammaPToXYP phasespace( lowMass, highMass, 0.140, 0.140, beamMaxE, beamPeakE, beamLowE, beamHighE, type, tslope );
+	GammaPToNPartP_Phasespace phasespace( pMasses, beamMaxE, beamPeakE, beamLowE, beamHighE );
 	
 	HDDMDataWriter* hddmOut = NULL;
 	if( hddmname.size() != 0 ) hddmOut = new HDDMDataWriter( hddmname, runNum );
@@ -179,7 +173,9 @@ int main( int argc, char* argv[] ){
 	TH2F* intenWVsM = new TH2F( "intenWVsM", "Ratio vs. M", 100, lowMass, highMass, 1000, 0, 10 );
 	
 	TH2F* CosTheta_psi = new TH2F( "CosTheta_psi", "cos#theta vs. #psi", 180, -3.14, 3.14, 100, -1, 1);
-	
+	TH2F* PiPlusPsi_t = new TH2F( "PiPlusPsi_t", "#psi vs |t|", 100, 0., 5., 180, -3.14, 3.14);
+	TH2F* CosTheta_t = new TH2F( "CosTheta_t", "cos#theta vs. t", 100, 0., 5., 100, -1, 1);
+
 	int eventCounter = 0;
 	while( eventCounter < nEvents ){
 		
@@ -194,7 +190,7 @@ int main( int argc, char* argv[] ){
 		ati.clearEvents();
 		for( int i = 0; i < batchSize; ++i ){
 			
-			Kinematics* kin = resProd.generate();
+			Kinematics* kin = phasespace.generate();
 			ati.loadEvent( kin, i, batchSize );
 			delete kin;
 		}
@@ -259,7 +255,13 @@ int main( int argc, char* argv[] ){
 					if(psi > PI) psi -= 2*PI;
 					
 					CosTheta_psi->Fill( psi, CosTheta);
-					
+
+					TLorentzVector target(0,0,0,0.938);
+					TLorentzVector Delta = (recoil - target);
+					double t = Delta.M2();
+					PiPlusPsi_t->Fill( fabs(t), psi);
+					CosTheta_t->Fill( fabs(t), CosTheta);
+
 					// we want to save events with weight 1
 					evt->setWeight( 1.0 );
 					
@@ -291,6 +293,8 @@ int main( int argc, char* argv[] ){
 	intenW->Write();
 	intenWVsM->Write();
 	CosTheta_psi->Write();
+	PiPlusPsi_t->Write();
+	CosTheta_t->Write();
 	diagOut->Close();
 	
 	if( hddmOut ) delete hddmOut;

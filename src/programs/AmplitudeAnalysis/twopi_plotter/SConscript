@@ -13,6 +13,7 @@ sbms.AddHDDM(env)
 sbms.AddROOT(env)
 sbms.AddAmpTools(env)
 sbms.AddAmpPlotter(env)
+sbms.AddCERNLIB(env)
 
 sbms.executable(env)
 
