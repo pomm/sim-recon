@@ -73,7 +73,7 @@ GammaPToNPartP_Phasespace::generate(){
   TLorentzVector cm = m_beam + m_target;
 
   Double_t masses[m_Npart];
-  for(uint i=0; i<m_Npart; i++)
+  for(unsigned int i=0; i<m_Npart; i++)
 	  masses[i] = m_childMass[i];
 
   TGenPhaseSpace phsp;
@@ -88,7 +88,7 @@ GammaPToNPartP_Phasespace::generate(){
 
   vector< TLorentzVector > allPart;
   allPart.push_back( m_beam );
-  for(uint i=0; i<m_Npart; i++) {
+  for(unsigned int i=0; i<m_Npart; i++) {
 	  allPart.push_back( *phsp.GetDecay(i) );
   }
  
