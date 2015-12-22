@@ -111,33 +111,6 @@ int main( int argc, char* argv[] ){
   atiSetup();
   PlotGen plotGen( results );
 
-  if(showGui) {
-
-    // ************************
-    // start the GUI
-    // ************************
-
-    cout << ">> Plot generator ready, starting GUI..." << endl;
-    
-    int dummy_argc = 0;
-    char* dummy_argv[] = {};  
-    TApplication app( "app", &dummy_argc, dummy_argv );
-    
-    gStyle->SetFillColor(10);
-    gStyle->SetCanvasColor(10);
-    gStyle->SetPadColor(10);
-    gStyle->SetFillStyle(1001);
-    gStyle->SetPalette(1);
-    gStyle->SetFrameFillColor(10);
-    gStyle->SetFrameFillStyle(1001);
-    
-    PlotFactory factory( plotGen );	
-    PlotterMainWindow mainFrame( gClient->GetRoot(), factory );
-    
-    app.Run();
-  
-  }    
-
     // ************************
     // set up an output ROOT file to store histograms
     // ************************
@@ -257,6 +230,33 @@ int main( int argc, char* argv[] ){
   outfile << P << "\t" << P_err << "\t";
   
   outfile << endl;
+
+    // ************************
+    // start the GUI
+    // ************************
+
+  if(showGui) {
+
+    cout << ">> Plot generator ready, starting GUI..." << endl;
+    
+    int dummy_argc = 0;
+    char* dummy_argv[] = {};  
+    TApplication app( "app", &dummy_argc, dummy_argv );
+    
+    gStyle->SetFillColor(10);
+    gStyle->SetCanvasColor(10);
+    gStyle->SetPadColor(10);
+    gStyle->SetFillStyle(1001);
+    gStyle->SetPalette(1);
+    gStyle->SetFrameFillColor(10);
+    gStyle->SetFrameFillStyle(1001);
+    
+    PlotFactory factory( plotGen );	
+    PlotterMainWindow mainFrame( gClient->GetRoot(), factory );
+    
+    app.Run();
+  
+  }    
   
   return 0;
 
