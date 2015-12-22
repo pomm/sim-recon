@@ -15,6 +15,7 @@
 #include "AMPTOOLS_DATAIO/HDDMDataWriter.h"
 
 #include "AMPTOOLS_AMPS/TwoPiAngles.h"
+#include "AMPTOOLS_AMPS/TwoPiSoding.h"
 #include "AMPTOOLS_AMPS/BreitWigner.h"
 #include "AMPTOOLS_AMPS/Uniform.h"
 #include "AMPTOOLS_AMPS/tSlope.h"
@@ -147,6 +148,7 @@ int main( int argc, char* argv[] ){
 
 	// setup AmpToolsInterface
 	AmpToolsInterface::registerAmplitude( TwoPiAngles() );
+	AmpToolsInterface::registerAmplitude( TwoPiSoding() );
 	AmpToolsInterface::registerAmplitude( BreitWigner() );
 	AmpToolsInterface::registerAmplitude( Uniform() );
 	AmpToolsInterface::registerAmplitude( tSlope() );
