@@ -120,27 +120,31 @@ TwoPiRhoJPAC::calcAmplitude( GDouble** pKin ) const {
 	TLorentzVector recoil ( pKin[1][1], pKin[1][2], pKin[1][3], pKin[1][0] ); 
 	TLorentzVector p1     ( pKin[2][1], pKin[2][2], pKin[2][3], pKin[2][0] ); 
 	TLorentzVector p2     ( pKin[3][1], pKin[3][2], pKin[3][3], pKin[3][0] ); 
-	
 	TLorentzVector resonance = p1 + p2;
+	
+	// boost to resonance frame for angular distributions 	
 	TLorentzRotation resonanceBoost( -resonance.BoostVector() );
-	TLorentzVector beam_res = resonanceBoost * beam;
 	TLorentzVector recoil_res = resonanceBoost * recoil;
 	TLorentzVector p1_res = resonanceBoost * p1;
 	
-	TVector3 z = -recoil_res.Vect().Unit();
-	TVector3 y = beam_res.Vect().Cross(z).Unit();
+	// normal to the production plane
+	TVector3 y = (beam.Vect().Unit().Cross(-recoil.Vect().Unit())).Unit();
+	
+	// choose helicity frame: z-axis opposite recoil proton in rho rest frame
+	TVector3 z = -1. * recoil_res.Vect().Unit();
 	TVector3 x = y.Cross(z).Unit();
-	TVector3 angles(   (p1_res.Vect()).Dot(x),
-			   (p1_res.Vect()).Dot(y),
-			   (p1_res.Vect()).Dot(z) );
+	TVector3 angles( (p1_res.Vect()).Dot(x),
+			 (p1_res.Vect()).Dot(y),
+			 (p1_res.Vect()).Dot(z) );
 	
 	GDouble cosTheta = angles.CosTheta();
 	GDouble sinSqTheta = sin(angles.Theta())*sin(angles.Theta());
 	GDouble sin2Theta = sin(2.*angles.Theta());
+	
 	GDouble phi = angles.Phi();
-
-	TVector3 eps(1.0, 0.0, 0.0); // beam linear polarization vector
-	GDouble Phi = atan2(y.Dot(eps), beam_res.Vect().Unit().Dot(eps.Cross(y)));
+	
+	TVector3 eps(1.0, 0.0, 0.0); // beam polarization vector
+	GDouble Phi = atan2(y.Dot(eps), beam.Vect().Unit().Dot(eps.Cross(y)));
 	
 	TLorentzVector target(0, 0, 0, 0.938);
 	GDouble s = (beam + target).M2();
