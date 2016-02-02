@@ -1584,33 +1584,13 @@ jerror_t JEventSource_EVIO::GetObjects(JEvent &event, JFactory_base *factory)
 	for(unsigned int i=0; i<vcdcp125.size(); i++){
 
 		Df125CDCPulse *cdcp = (Df125CDCPulse*)vcdcp125[i];
-		const Df125Config*conf = NULL;
-		cdcp->GetSingle(conf);
-
-		// If this CDCpulse is *not* emulated AND there is
-		// a configuration object from the data stream associated,
-		// then copy the number of samples for the integral from it.
-		if(!cdcp->emulated){
-			if(conf){
-				cdcp->nsamples_integral = conf->NSA_NSB;
-			}
-		}
+		if(!cdcp->emulated) UpdateNsamplesFromf125Config(cdcp);
 	}
 	vector<JObject*> &vfdcp125 = hit_objs_by_type["Df125FDCPulse"];
 	for(unsigned int i=0; i<vfdcp125.size(); i++){
 
 		Df125FDCPulse *fdcp = (Df125FDCPulse*)vfdcp125[i];
-		const Df125Config*conf = NULL;
-		fdcp->GetSingle(conf);
-
-		// If this FDCpulse is *not* emulated AND there is
-		// a configuration object from the data stream associated,
-		// then copy the number of samples for the integral from it.
-		if(!fdcp->emulated){
-			if(conf){
-				fdcp->nsamples_integral = conf->NSA_NSB;
-			}
-		}
+		if(!fdcp->emulated) UpdateNsamplesFromf125Config(fdcp);
 	}
 
 	// Loop over types of config objects, copying to appropriate factory
@@ -1777,6 +1757,45 @@ void JEventSource_EVIO::CopyBOR(JEventLoop *loop, map<string, vector<JObject*> >
 	}
 
 	pthread_rwlock_unlock(&BOR_lock);
+}
+
+//----------------
+// UpdateNsamplesFromf125Config
+//----------------
+template<class T>
+void JEventSource_EVIO::UpdateNsamplesFromf125Config(T *t)
+{
+	/// Using the given pointer to an apporpriate f125 hit object,
+	/// look for configuration parameters in its associated objects
+	/// and calculate the number of samples in the integral and/or
+	/// pedestal and update those values in the hit object. This will
+	/// check for a Df125BORConfig associated object first (which should
+	/// be present in newer data). If not found, it will look for a
+	/// Df125Config object (which should be present in older commissioning
+	/// data).
+
+	const Df125BORConfig *bor = NULL;
+	t->GetSingle(bor);
+	if(bor){
+		//printf("calculating nsamples_integral from le_time, Df125BORconfig NW and IE \n");
+
+		uint32_t IE = bor->fe[0].ie;
+		uint32_t NW = bor->fe[0].nw;
+
+		uint32_t timesample = t->le_time/10;
+		t->nsamples_integral = NW - timesample;
+		if( NW > (timesample + IE) ) t->nsamples_integral = IE;
+
+	} else {
+
+		const Df125Config *conf = NULL;
+		t->GetSingle(conf);
+
+		if (conf) {
+			//printf("setting nsamples_integral from Df125config NSA_NSB\n");
+			t->nsamples_integral = (uint32_t)conf->NSA_NSB;;
+		}
+	}
 }
 
 //----------------

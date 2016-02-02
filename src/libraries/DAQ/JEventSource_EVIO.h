@@ -354,6 +354,7 @@ class JEventSource_EVIO: public jana::JEventSource{
 		vector<JObject*> BORobjs;
 
 		void CopyBOR(JEventLoop *loop, map<string, vector<JObject*> > &hit_objs_by_type);
+		template<class T> void UpdateNsamplesFromf125Config(T *t);
 		void AddSourceObjectsToCallStack(JEventLoop *loop, string className);
 		void AddEmulatedObjectsToCallStack(JEventLoop *loop, string caller, string callee);
 		void EmulateDf250PulseIntegral(vector<JObject*> &wrd_objs, vector<JObject*> &pi_objs);
