@@ -51,6 +51,11 @@ jerror_t JEventProcessor_ST_Tresolution::init(void)
 	//
   // **************** define histograms *************************
   japp->RootWriteLock(); //ACQUIRE ROOT LOCK!!
+
+  //Create root folder and cd to it, store main dir
+  TDirectory *main = gDirectory;
+  gDirectory->mkdir("ST_Tresolution")->cd();
+
   h2_CorrectedTime_z = new TH2I*[NCHANNELS];
   // All my Calculations in 2015 were using the binning below
   NoBins_time = 80;
@@ -63,14 +68,21 @@ jerror_t JEventProcessor_ST_Tresolution::init(void)
     { 
       h2_CorrectedTime_z[i] = new TH2I(Form("h2_CorrectedTime_z_%i", i+1), "Corrected Time vs. Z; Z (cm); Propagation Time (ns)", NoBins_z,z_lower_limit,z_upper_limit, NoBins_time, time_lower_limit, time_upper_limit);
     }
+
+  // cd back to main directory
+  main->cd();
   japp->RootUnLock();
+
+  RF_BUNCH_TAG = "Calibrations";
+  gPARMS->SetDefaultParameter("SC_TCALIB:RF_BUNCH_TAG", RF_BUNCH_TAG, "RF bunch selection tag for SC timing resolution");
+  
   return NOERROR;
 }
 
 //------------------
 // brun
 //------------------
-jerror_t JEventProcessor_ST_Tresolution::brun(JEventLoop *eventLoop, int runnumber)
+jerror_t JEventProcessor_ST_Tresolution::brun(JEventLoop *eventLoop, int32_t runnumber)
 {
 	// This is called whenever the run number changes
   // Get the particleID object for each run
@@ -120,7 +132,7 @@ jerror_t JEventProcessor_ST_Tresolution::brun(JEventLoop *eventLoop, int runnumb
 //------------------
 // evnt
 //------------------
-jerror_t JEventProcessor_ST_Tresolution::evnt(JEventLoop *loop, int eventnumber)
+jerror_t JEventProcessor_ST_Tresolution::evnt(JEventLoop *loop, uint64_t eventnumber)
 {
 	// This is called for every event. Use of common resources like writing
 	// to a file or filling a histogram should be mutex protected. Using
@@ -139,7 +151,7 @@ jerror_t JEventProcessor_ST_Tresolution::evnt(JEventLoop *loop, int eventnumber)
   // SC hits
   vector<const DSCHit *> scHitVector;
   loop->Get(scHitVector);
-  
+
   // RF time object
   const DRFTime* thisRFTime = NULL;
   vector <const DRFTime*> RFTimeVector;
@@ -157,8 +169,7 @@ jerror_t JEventProcessor_ST_Tresolution::evnt(JEventLoop *loop, int eventnumber)
   
   // Grab the associated RF bunch object
   const DEventRFBunch *thisRFBunch = NULL;
-  loop->GetSingle(thisRFBunch, "Calibrations");
-  
+  loop->GetSingle(thisRFBunch, RF_BUNCH_TAG.c_str());
 
   japp->RootWriteLock();
   for (uint32_t i = 0; i < chargedTrackVector.size(); i++)

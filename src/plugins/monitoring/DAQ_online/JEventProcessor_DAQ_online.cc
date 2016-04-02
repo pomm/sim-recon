@@ -582,7 +582,15 @@ void JEventProcessor_DAQ_online::ParseEventSize(JEvent &event)
 		
 		uint64_t Nwords = ((uint64_t)imyend - (uint64_t)iptr)/sizeof(uint32_t);
 		if(Nwords<2){
-			cout << "Nwords<2 (?)" << endl;
+			static int Nwarnings = 0;
+			if(Nwarnings<10){
+				cout << "Nwords<2 (?)" << endl;
+				cout << "     evio_buffwords = " << evio_buffwords << endl;
+				cout << "  physics_event_len = " << physics_event_len << endl;
+				cout << "   trigger_bank_len = " << trigger_bank_len << endl;
+				event.Print();
+				if(++Nwarnings == 10) cout << "Last warning!" << endl;
+			}
 			break;
 		}
 
@@ -654,6 +662,8 @@ void JEventProcessor_DAQ_online::DataWordStats(uint32_t *iptr, uint32_t *iend, u
 		uint32_t data_block_bank_len = *iptr++;
 		uint32_t *iendbank = &iptr[data_block_bank_len];
 		uint32_t det_id = ((*iptr) >> 16) & 0x0FFF;
+		
+		if(iendbank > iend) iendbank = iend;
 		
 		word_stats[kEVIOHeader] += 2; // data block bank length and header words
 
@@ -915,6 +925,22 @@ jerror_t JEventProcessor_DAQ_online::erun(void)
 	// This is called whenever the run number changes, before it is
 	// changed to give you a chance to clean up before processing
 	// events from the next run number.
+
+	for (int i=0; i<highcratenum; i++) {
+		if (daq_occ_crates[i] != NULL) {
+			daq_occ_crates[i]->SetMinimum(daq_occ_crates[i]->GetMinimum(0.001));
+		}
+		if (daq_ped_crates[i] != NULL) {
+			daq_ped_crates[i]->SetMinimum(daq_ped_crates[i]->GetMinimum(0.001));
+		}
+		if (daq_TDClocked_crates[i] != NULL) {
+			daq_TDClocked_crates[i]->SetMinimum(daq_TDClocked_crates[i]->GetMinimum(0.001));
+		}
+		if (daq_TDCovr_crates[i] != NULL) {
+			daq_TDCovr_crates[i]->SetMinimum(daq_TDCovr_crates[i]->GetMinimum(0.001));
+		}
+	}
+
 	return NOERROR;
 }
 
