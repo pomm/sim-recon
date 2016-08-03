@@ -411,6 +411,10 @@ jerror_t DEventSourceHDDM::GetObjects(JEvent &event, JFactory_base *factory)
       return Extract_DDIRCTruthPoint(record,
                      dynamic_cast<JFactory<DDIRCTruthPoint>*>(factory), tag);
 
+   if (dataClassName == "DDIRCMirHit")
+     return Extract_DDIRCMirHit(record,
+		     dynamic_cast<JFactory<DDIRCMirHit>*>(factory), tag);
+
    // extract CereTruth and CereRichHit hits, yqiang Oct 3, 2012
    // removed CereTruth (merged into MCThrown), added CereHit, yqiang Oct 10 2012
    if (dataClassName == "DCereHit")
@@ -2788,6 +2792,44 @@ jerror_t DEventSourceHDDM::Extract_DDIRCTruthHit(hddm_s::HDDM *record,
    factory->CopyTo(data);
    return NOERROR;
 }
+
+//----------------------                                                                                                                                    
+// Extract_DDIRCMirHit                                                                                                                                    
+//----------------------                                                                                                                                    
+jerror_t DEventSourceHDDM::Extract_DDIRCMirHit(hddm_s::HDDM *record,
+						 JFactory<DDIRCMirHit>* factory,
+						 string tag)
+{
+  if (factory == NULL)
+    return OBJECT_NOT_AVAILABLE;
+  if (tag != "")
+    return OBJECT_NOT_AVAILABLE;
+
+  vector<DDIRCMirHit*> data;
+
+  const hddm_s::DircMirHitList &hits = record->getDircMirHits();
+  hddm_s::DircMirHitList::iterator iter;
+  for (iter = hits.begin(); iter != hits.end(); ++iter) {
+    DDIRCMirHit *hit = new DDIRCMirHit;
+    hit->x       = iter->getX();
+    hit->y       = iter->getY();
+    hit->z       = iter->getZ();
+    //    hit->px      = iter->getPx();
+    //hit->py      = iter->getPy();
+    //hit->pz      = iter->getPz();
+    hit->t       = iter->getT();
+    //hit->E       = iter->getE();
+    hit->track   = iter->getTrack();
+    //hit->parent = iter->getParent(); ??                                                                                                                  
+    hit->reflectionID = iter->getReflectionID();
+    hit->volumeID = iter->getVolumeID();
+    data.push_back(hit);
+  }
+
+  factory->CopyTo(data);
+  return NOERROR;
+}
+
 
 //----------------------
 // Extract_DDIRCTruthPoint

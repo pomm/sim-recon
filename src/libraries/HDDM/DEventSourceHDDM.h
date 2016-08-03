@@ -61,6 +61,7 @@ using namespace std;
 #include "DIRC/DDIRCHit.h"
 #include "DIRC/DDIRCTruthHit.h"
 #include "DIRC/DDIRCTruthPoint.h"
+#include "DIRC/DDIRCMirHit.h"
 #include <RF/DRFTime.h>
 #include <DANA/DApplication.h>
 #include "PAIR_SPECTROMETER/DPSHit.h"
@@ -143,6 +144,7 @@ class DEventSourceHDDM:public JEventSource
       // Oct 8, 2013, added dedicated object for RICH truth hit
       jerror_t Extract_DCereHit(hddm_s::HDDM *record, JFactory<DCereHit> *factory, string tag);
       jerror_t Extract_DDIRCHit(hddm_s::HDDM *record, JFactory<DDIRCHit> *factory, string tag);
+      jerror_t Extract_DDIRCMirHit(hddm_s::HDDM *record, JFactory<DDIRCMirHit> *factory, string tag);
       jerror_t Extract_DDIRCTruthHit(hddm_s::HDDM *record, JFactory<DDIRCTruthHit> *factory, string tag);
       jerror_t Extract_DDIRCTruthPoint(hddm_s::HDDM *record, JFactory<DDIRCTruthPoint> *factory, string tag);
 
