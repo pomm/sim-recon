@@ -230,8 +230,8 @@ c      write(6,*)cnames(NLEVEL)
           call hitDirc(xin,xout,pin,pout,dEsum,ITRA,ISTAK,ISTORY,
      >          IPART)
         endif
-*      elseif (cnames(NLEVEL).eq.'RDCD') then ! DIRC photocathode plane
-      elseif (cnames(NLEVEL).eq.'PIXV') then ! DIRC pixel
+      elseif (cnames(NLEVEL).eq.'RDCD') then ! DIRC photocathode plane
+*      elseif (cnames(NLEVEL).eq.'PIXV') then ! DIRC pixel
         if ((dEsum.gt.0).and.(IPART.eq.50)) then
           call hitDirc(xin,xout,pin,pout,-dEsum,ITRA,ISTAK,ISTORY,
      >          IPART)

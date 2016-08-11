@@ -25,6 +25,8 @@ public:
 	int itrack;	///< MCThrown track index
 	int primary;	///< primary track=1    not primary track=0
 	int ptype;    /// particle type
+	int barnum; // number of the radiator hit
+	int bboxnum; // number of the bar box hit
 
 	void toStrings(vector<pair<string, string> >&items) const {
 		AddString(items, "x", "%1.3f", x);
@@ -39,6 +41,8 @@ public:
 		AddString(items, "itrack", "%d", itrack);
 		AddString(items, "primary", "%d", primary);
 		AddString(items, "ptype", "%d", ptype);
+		//AddString(items, "barnum", "%d", barnum);
+		//AddString(items, "bboxnum", "%d", bboxnum);
 	}
 };
 

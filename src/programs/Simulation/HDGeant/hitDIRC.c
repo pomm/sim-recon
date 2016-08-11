@@ -43,6 +43,8 @@ void hitDIRC(float xin[4], float xout[4], float pin[5], float pout[5],
 			s_DircTruthPoints_t* truthPoints = make_s_DircTruthPoints(1);
 			dirc->dircTruthPoints = truthPoints;
 			int a = thisInputEvent->physicsEvents->in[0].reactions->in[0].vertices->in[0].products->mult;
+			int bar = getmodule_wrapper_();
+			int barbox = getplane_wrapper_();
 			truthPoints->in[0].primary = (stack <= a);
 			truthPoints->in[0].track = track;
 			truthPoints->in[0].x = xin[0];
@@ -56,6 +58,8 @@ void hitDIRC(float xin[4], float xout[4], float pin[5], float pout[5],
 			truthPoints->in[0].ptype = ipart;
 			truthPoints->in[0].trackID = make_s_TrackID();
 			truthPoints->in[0].trackID->itrack = gidGetId(track);
+			//truthPoints->in[0].barnum = bar;
+			//truthPoints->in[0].bboxnum = barbox;
 			truthPoints->mult = 1;
 			dircTruthPointCount++;
 		}
@@ -80,6 +84,10 @@ void hitDIRC(float xin[4], float xout[4], float pin[5], float pout[5],
 			truthHits->in[0].E = pin[3];
 			truthHits->in[0].track = track;
 			truthHits->mult = 1;
+			int pixel= getcell_wrapper_();
+			int PMTrow = getrow_wrapper_();
+			int PMTcolumn = getcolumn_wrapper_();
+			int OBnumber = getsector_wrapper_();
 			dircTruthHitCount++;
 		}
 	}

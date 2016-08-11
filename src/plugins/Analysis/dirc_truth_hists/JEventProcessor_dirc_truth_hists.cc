@@ -81,6 +81,7 @@ jerror_t JEventProcessor_dirc_truth_hists::init(void)
 		hTruthHitXY = new TH2F("hTruthHitXY","hTruthHit Y vx X; X; Y", 200, 218., 240., 240, -120., 120.);
 		hTruthHitZX = new TH2F("hTruthHitZX","hTruthHit X vx Z; Z; X", 200, 541., 564., 200, 218., 240.);
 		hTruthHitYLocW = new TH2F("hTruthHitYLocW","hTruthHit LocW vx Y; Y; LocW", 400, -120., 120., 60, -1.8, 34.2); // 6 x 6 mm pixel size
+		hHitsYLocW = new TH2F("hHitsYLocW",";x [cm];y [cm]",500,-1500.,1500.,67,-50.,352.);
 		hTruthHitMissingYLocW = new TH2F("hTruthHitMissingYLocW","hTruthHitMissing LocW vx Y; Y; LocW", 400, -120., 120., 60, -1.8, 34.2); // 6 x 6 mm pixel size
 
 		hTruthHitIncidentAngleY = new TH2F("hTruthHitIncidentAngleY", "hTruthHitIncidentAngleY", 400, -120, 120, 180, 0., 45.);
@@ -113,7 +114,6 @@ jerror_t JEventProcessor_dirc_truth_hists::evnt(JEventLoop *loop, uint64_t event
 	vector<const DDIRCTruthHit*> locDIRCTruthHit;
 	loop->Get(locDIRCTruthPoint);
 	loop->Get(locDIRCTruthHit);
-
 	nGenTrk = 0;
 	nTruthHit = 0;
 
@@ -211,6 +211,7 @@ jerror_t JEventProcessor_dirc_truth_hists::evnt(JEventLoop *loop, uint64_t event
 			
 			// plot position on local readout plane
 			hTruthHitYLocW->Fill(locDIRCTruthHit[loc_i]->y, (hit-ref).Mag());
+			hHitsYLocW->Fill(locDIRCTruthHit[loc_i]->y*10., (hit-ref).Mag()*10.);
 			hTruthHitYLocWT->Fill(locDIRCTruthHit[loc_i]->y, (hit-ref).Mag(), time);
 			hTruthHitIncidentAngleY->Fill(locDIRCTruthHit[loc_i]->y, incidentAngle*180./TMath::Pi());
 			hTruthHitIncidentAngleLocW->Fill((hit-ref).Mag(), incidentAngle*180./TMath::Pi());

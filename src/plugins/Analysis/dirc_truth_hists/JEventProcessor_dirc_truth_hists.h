@@ -60,7 +60,7 @@ class JEventProcessor_dirc_truth_hists:public jana::JEventProcessor{
 		Float_t m_hitpixel_y[kTruthHitMax];
 
 		TH1F *hTruthHitT, *hTruthHitDeltaT, *hTruthHitE, *hTruthHitLambda, *hTruthPointM;
-		TH2F *hTruthPoint, *hTruthHitXY, *hTruthHitZX, *hTruthHitYLocW, *hTruthHitMissingYLocW;
+		TH2F *hTruthPoint, *hTruthHitXY, *hTruthHitZX, *hTruthHitYLocW, *hTruthHitMissingYLocW, *hHitsYLocW;
 		TH2F *hTruthHitIncidentAngleLocW, *hTruthHitIncidentAngleY;
 		TH3F *hTruthHitYLocWT;
 		TH2F *hNTruthHit;
